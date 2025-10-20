@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro UVM - Solicita Información</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #004aad, #00a1e4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    overflow: hidden;
+  }
+
+  .banner {
+    background: linear-gradient(135deg, #004aad, #00a1e4);
+    color: #fff;
+    text-align: center;
+    padding: 25px 0;
+  }
+
+  .banner img {
+    width: 60px;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+  .banner h1 {
+    display: inline-block;
+    font-size: 24px;
+    margin: 0;
+    vertical-align: middle;
+  }
+
+  form {
+    padding: 30px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .input-group {
+    position: relative;
+  }
+
+  .input-group input,
+  .input-group select {
+    width: 100%;
+    padding: 14px 14px 14px 50px; /* espacio para icono */
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+
+  .input-group input:focus,
+  .input-group select:focus {
+    border-color: #004aad;
+    box-shadow: 0 0 8px rgba(0,74,173,0.4);
+    outline: none;
+  }
+
+  /* Iconos de los inputs */
+  .input-group img {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;        /* tamaño uniforme */
+    height: 24px;
+    opacity: 0.7;       /* color semi-transparente */
+    pointer-events: none; /* no interfiere al hacer clic */
+  }
+
+  button {
+    background: linear-gradient(45deg, #004aad, #00a1e4);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s;
+  }
+
+  button:hover {
+    background: linear-gradient(45deg, #002f6c, #007abf);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+
+  #mensaje {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 15px;
+    opacity: 0;
+    transition: opacity 0.5s, transform 0.5s;
+  }
+
+  #mensaje.show {
+    opacity: 1;
+    transform: translateY(5px);
+  }
+
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="banner">
+    <img src="/img/uvm_logo.png" alt="Logo UVM">
+    <h1>Solicita Información</h1>
+  </div>
+
+  <form id="formulario">
+    <div class="input-group">
+      <img src="/icons/user.png" alt="Usuario">
+      <input type="text" name="nombre" placeholder="Nombre completo" required>
+    </div>
+
+    <div class="input-group">
+      <img src="/icons/email.png" alt="Correo">
+      <input type="email" name="email" placeholder="Correo electrónico" required>
+    </div>
+
+    <div class="input-group">
+      <img src="icons/phone.png" alt="Teléfono">
+      <input type="tel" name="telefono" placeholder="Teléfono (opcional)">
+    </div>
+
+    <div class="input-group">
+      <img src="icons/career.png" alt="Carrera">
+      <select name="carrera" required>
+        <option value="" disabled selected>Selecciona la carrera de interés</option>
+        <option value="ingenieria_sistemas">Ingeniería en Sistemas</option>
+        <option value="administracion">Administración</option>
+        <option value="derecho">Derecho</option>
+        <option value="medicina">Medicina</option>
+      </select>
+    </div>
+
+    <button type="submit">Enviar Solicitud</button>
+  </form>
+
+  <div id="mensaje"></div>
+  <div class="footer">© 2025 Universidad del Valle de México</div>
+</div>
+
+<script>
+const form = document.getElementById("formulario");
+const mensaje = document.getElementById("mensaje");
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  const datos = new FormData(this);
+
+  fetch("insertar.php", { method: "POST", body: datos })
+  .then(res => res.text())
+  .then(data => {
+    if(data.trim() === "OK") {
+      mensaje.innerHTML = "✅ Solicitud enviada correctamente";
+      mensaje.style.color = "green";
+      mensaje.classList.add("show");
+      setTimeout(()=>mensaje.classList.remove("show"), 3000);
+      this.reset();
+    } else {
+      mensaje.innerHTML = "❌ Error al enviar la solicitud";
+      mensaje.style.color = "red";
+      mensaje.classList.add("show");
+      setTimeout(()=>mensaje.classList.remove("show"), 3000);
+    }
+  })
+  .catch(err=>{
+    mensaje.innerHTML = "❌ Error al enviar la solicitud";
+    mensaje.style.color = "red";
+    mensaje.classList.add("show");
+    setTimeout(()=>mensaje.classList.remove("show"), 3000);
+  });
+});
+</script>
+
+</body>
+</html>
