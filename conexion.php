@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "usuarios_validados"; // Asegúrate de que tu base se llame así
+$database = "usuarios_validados"; 
 
 $conn = new mysqli($servername, $username, $password, $database);
 
